@@ -15,7 +15,7 @@ if (isset($_POST['y'])) {
 if (isset($_POST['z'])) {
     $z = (int)$_POST['z'];
 }
-if (isset($_POST['z'])) {
+if (isset($_POST['dimension'])) {
     $dimension = $_POST['dimension'];
 }
 
