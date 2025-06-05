@@ -3,49 +3,45 @@
 $x = 0;
 $y = 0;
 $z = 0;
-$result = null
+$result = null;
 $dimension = "";
 
 if (isset($_POST['x'])) {
-    $x = (int)$_POST['x'];
+    $x = (float)$_POST['x'];
 }
 if (isset($_POST['y'])) {
-    $y = (int)$_POST['y'];
+    $y = (float)$_POST['y'];
 }
 if (isset($_POST['z'])) {
-    $z = (int)$_POST['z'];
+    $z = (float)$_POST['z'];
 }
 if (isset($_POST['dimension'])) {
     $dimension = $_POST['dimension'];
 }
 
-if ($dimension == 'overworld'){
-   $result[] = overworld_a_nether($x, $y, $z);
-
-} else if($dimension == 'nether'){
-    $result[] = nether_a_overword($x, $y, $z);
+if ($dimension == 'overworld') {
+    $result = overworld_a_nether($x, $y, $z);
+} else if ($dimension == 'nether') {
+    $result = nether_a_overworld($x, $y, $z);
 }
+
 function overworld_a_nether($x, $y, $z)
 {
-    $x = $x / 8;
-    $result[0] = $x;
-    $result[1] = $y;
-    $z = $z / 8;
-    $result[2] = $z;
-    return $result;
+    return [
+        $x / 8,
+        $y,
+        $z / 8
+    ];
 }
 
-function nether_a_overword($x, $y, $z)
+function nether_a_overworld($x, $y, $z)
 {
-    $x = $x * 8;
-    $result[0] = $x;
-    $result[1] = $y;
-    $z = $z * 8;
-    $result[2] = $z;
-    return $result;
+    return [
+        $x * 8,
+        $y,
+        $z * 8
+    ];
 }
-
-
 
 ?>
 
@@ -62,8 +58,9 @@ function nether_a_overword($x, $y, $z)
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 1rem;
         }
 
         .form-container {
@@ -73,6 +70,7 @@ function nether_a_overword($x, $y, $z)
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
             width: 100%;
             max-width: 400px;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -95,6 +93,7 @@ function nether_a_overword($x, $y, $z)
             background-color: #4a4a4a;
             color: #ffffff;
             font-size: 1rem;
+            box-sizing: border-box;
         }
 
         button {
@@ -107,34 +106,55 @@ function nether_a_overword($x, $y, $z)
             border-radius: 6px;
             font-size: 1rem;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
             background-color: #6cd645;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #4a4a4a;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #8fff57;
+            word-break: break-word;
         }
     </style>
 </head>
 <body>
 <div class="form-container">
     <h1>Conversor Minecraft</h1>
-    <form action="convertir.php" method="POST">
+    <form action="" method="POST">
         <label for="dimension">¿Desde qué dimensión quieres convertir las coordenadas?</label>
         <select name="dimension" id="dimension" required>
-            <option value="overworld">Overworld → Nether</option>
-            <option value="nether">Nether → Overworld</option>
+            <option value="overworld" <?= ($dimension === 'overworld') ? 'selected' : '' ?>>Overworld → Nether</option>
+            <option value="nether" <?= ($dimension === 'nether') ? 'selected' : '' ?>>Nether → Overworld</option>
         </select>
 
         <label for="x">Coordenada X:</label>
-        <input type="number" name="x" id="x" step="any" required>
+        <input type="number" name="x" id="x" step="any" value="<?= htmlspecialchars($x) ?>" required>
 
         <label for="y">Coordenada Y:</label>
-        <input type="number" name="y" id="y" step="any" required>
+        <input type="number" name="y" id="y" step="any" value="<?= htmlspecialchars($y) ?>" required>
 
         <label for="z">Coordenada Z:</label>
-        <input type="number" name="z" id="z" step="any" required>
+        <input type="number" name="z" id="z" step="any" value="<?= htmlspecialchars($z) ?>" required>
 
         <button type="submit">Convertir</button>
     </form>
+
+    <?php if ($result !== null): ?>
+        <div class="result">
+            <strong>Coordenadas convertidas:</strong><br>
+            X: <?= round($result[0], 3) ?><br>
+            Y: <?= round($result[1], 3) ?><br>
+            Z: <?= round($result[2], 3) ?>
+        </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>
