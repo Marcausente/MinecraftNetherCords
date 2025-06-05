@@ -67,7 +67,7 @@
 <div class="form-container">
     <h1>Conversor Minecraft</h1>
     <form action="convertir.php" method="POST">
-        <label for="dimension">¿Desde qué dimensión quieres convertir?</label>
+        <label for="dimension">¿Desde qué dimensión quieres convertir las coordenadas?</label>
         <select name="dimension" id="dimension" required>
             <option value="overworld">Overworld → Nether</option>
             <option value="nether">Nether → Overworld</option>
